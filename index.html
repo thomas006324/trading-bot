@@ -3,110 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trading Analyzer Pro</title>
+  <title>Trading Bot TJ</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #06090f; color: #b0c4d8; font-family: 'Courier New', monospace; min-height: 100vh; padding: 20px 16px; }
 
-    body {
-      background: #06090f;
-      color: #b0c4d8;
-      font-family: 'Courier New', monospace;
-      min-height: 100vh;
-      padding: 20px 16px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
+    .header { text-align: center; margin-bottom: 24px; }
     .header .sub { font-size: 9px; letter-spacing: 5px; color: #1a3a5a; margin-bottom: 6px; }
-    .header h1 {
-      font-size: 24px; font-weight: 900; letter-spacing: 3px;
-      background: linear-gradient(90deg, #ffd700, #00d4ff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
+    .header h1 { font-size: 24px; font-weight: 900; letter-spacing: 3px; background: linear-gradient(90deg, #ffd700, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .header .tags { font-size: 9px; color: #1a3a5a; margin-top: 5px; letter-spacing: 2px; }
 
-    .api-section {
-      max-width: 560px; margin: 0 auto 16px;
-      background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px; padding: 14px;
-    }
+    .api-section { max-width: 560px; margin: 0 auto 16px; background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px; padding: 14px; }
     .api-section label { font-size: 9px; letter-spacing: 3px; color: #2a4a6a; display: block; margin-bottom: 8px; }
-    .api-section input {
-      width: 100%; background: #060910; border: 1px solid #1a2a3a; border-radius: 6px;
-      color: #b0c4d8; font-family: 'Courier New', monospace; font-size: 11px;
-      padding: 10px 12px; outline: none;
-    }
+    .api-section input { width: 100%; background: #060910; border: 1px solid #1a2a3a; border-radius: 6px; color: #b0c4d8; font-family: 'Courier New', monospace; font-size: 11px; padding: 10px 12px; outline: none; }
     .api-hint { font-size: 9px; color: #1a3a5a; margin-top: 6px; }
     .api-hint a { color: #1a5a8a; }
 
+    .instructions { max-width: 560px; margin: 0 auto 14px; background: #0a1a0a; border: 1px solid #1a3a1a; border-radius: 8px; padding: 14px; }
+    .instructions .inst-title { font-size: 9px; letter-spacing: 3px; color: #2a6a2a; margin-bottom: 10px; }
+    .inst-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .inst-item { background: #060f06; border: 1px solid #1a3a1a; border-radius: 6px; padding: 10px; }
+    .inst-item .inst-tf { font-size: 10px; font-weight: 700; color: #ffbb00; margin-bottom: 5px; }
+    .inst-item .inst-desc { font-size: 9px; color: #4a8a4a; line-height: 1.6; }
+
     .selector { max-width: 560px; margin: 0 auto 14px; display: flex; gap: 7px; }
-    .selector button {
-      flex: 1; padding: 9px 0;
-      background: #0a1018; border: 1px solid #1a2a3a; border-radius: 6px;
-      color: #3a5a7a; font-family: 'Courier New', monospace; font-size: 10px;
-      letter-spacing: 3px; cursor: pointer; font-weight: 400; transition: all 0.2s;
-    }
-    .selector button.active {
-      background: #0a2a4a; border-color: #1a6aaa; color: #00d4ff; font-weight: 700;
-    }
+    .selector button { flex: 1; padding: 9px 0; background: #0a1018; border: 1px solid #1a2a3a; border-radius: 6px; color: #3a5a7a; font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 3px; cursor: pointer; font-weight: 400; transition: all 0.2s; }
+    .selector button.active { background: #0a2a4a; border-color: #1a6aaa; color: #00d4ff; font-weight: 700; }
 
     .uploads { max-width: 560px; margin: 0 auto 14px; }
     .uploads-label { font-size: 9px; letter-spacing: 3px; color: #2a4a6a; margin-bottom: 10px; }
     .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .upload-zone {
-      border: 2px dashed #1a2a3a; border-radius: 10px; cursor: pointer;
-      background: #0a1018; overflow: hidden; aspect-ratio: 4/3;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; transition: border-color 0.2s;
-    }
+    .upload-zone { border: 2px dashed #1a2a3a; border-radius: 10px; cursor: pointer; background: #0a1018; overflow: hidden; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; position: relative; transition: border-color 0.2s; }
     .upload-zone:hover { border-color: #1a5a8a; }
     .upload-zone.has-image { border-color: #1a6aaa88; }
     .upload-zone img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .upload-placeholder { text-align: center; padding: 16px; }
     .upload-placeholder .icon { font-size: 28px; opacity: 0.15; margin-bottom: 8px; }
     .upload-placeholder .label { font-size: 10px; color: #2a4a6a; letter-spacing: 2px; }
-    .upload-placeholder .hint { font-size: 8px; color: #1a2a3a; margin-top: 4px; }
+    .upload-placeholder .hint { font-size: 8px; color: #1a2a3a; margin-top: 4px; line-height: 1.5; }
     .upload-tf { font-size: 9px; letter-spacing: 2px; text-align: center; margin-top: 6px; }
-
-    .remove-btn {
-      position: absolute; top: 6px; right: 6px;
-      width: 20px; height: 20px; background: #ff335599; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; color: #fff; cursor: pointer; border: none;
-    }
+    .remove-btn { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; background: #ff335599; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; cursor: pointer; border: none; }
 
     .actions { max-width: 560px; margin: 0 auto 20px; display: flex; gap: 7px; }
-    .btn-clear {
-      padding: 12px 16px; background: #0a1018; border: 1px solid #1a2a3a;
-      border-radius: 7px; color: #3a5a7a; font-family: 'Courier New', monospace;
-      font-size: 10px; cursor: pointer; letter-spacing: 2px;
-    }
-    .btn-analyze {
-      flex: 1; padding: 14px 0;
-      background: linear-gradient(90deg, #0a3060, #0a5080);
-      border: 1px solid #1a5a8a; border-radius: 7px; color: #fff;
-      font-family: 'Courier New', monospace; font-size: 11px;
-      letter-spacing: 4px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-analyze:disabled {
-      background: #0a1018; border-color: #1a2a3a; color: #1a3a5a; cursor: not-allowed;
-    }
+    .btn-clear { padding: 12px 16px; background: #0a1018; border: 1px solid #1a2a3a; border-radius: 7px; color: #3a5a7a; font-family: 'Courier New', monospace; font-size: 10px; cursor: pointer; letter-spacing: 2px; }
+    .btn-analyze { flex: 1; padding: 14px 0; background: linear-gradient(90deg, #0a3060, #0a5080); border: 1px solid #1a5a8a; border-radius: 7px; color: #fff; font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 4px; font-weight: 700; cursor: pointer; }
+    .btn-analyze:disabled { background: #0a1018; border-color: #1a2a3a; color: #1a3a5a; cursor: not-allowed; }
 
-    .error {
-      max-width: 560px; margin: 0 auto 14px; padding: 13px;
-      background: #150508; border: 1px solid #3a0a15; border-radius: 7px;
-      color: #ff3355; font-size: 11px; line-height: 1.6;
-    }
+    .error { max-width: 560px; margin: 0 auto 14px; padding: 13px; background: #150508; border: 1px solid #3a0a15; border-radius: 7px; color: #ff3355; font-size: 11px; line-height: 1.6; }
 
-    /* RESULTS */
     .results { max-width: 560px; margin: 0 auto; }
-
-    .hero {
-      border-radius: 10px; padding: 18px; margin-bottom: 10px;
-      display: flex; justify-content: space-between; align-items: flex-start;
-    }
+    .hero { border-radius: 10px; padding: 18px; margin-bottom: 10px; }
+    .hero-inner { display: flex; justify-content: space-between; align-items: flex-start; }
     .hero-left .asset { font-size: 9px; letter-spacing: 3px; color: #2a4a6a; margin-bottom: 3px; }
     .hero-left .signal { font-size: 38px; font-weight: 900; letter-spacing: 2px; line-height: 1; }
     .hero-left .trend { margin-top: 8px; font-size: 13px; font-weight: 900; }
@@ -114,18 +61,13 @@
     .hero-right { text-align: right; }
     .hero-right .conf-label { font-size: 9px; color: #2a4a6a; letter-spacing: 2px; }
     .hero-right .conf-value { font-size: 40px; font-weight: 900; line-height: 1; }
-    .phase-badge {
-      margin-top: 6px; padding: 3px 8px; border-radius: 4px;
-      display: inline-block; font-size: 8px; letter-spacing: 1px; font-weight: 700;
-    }
+    .phase-badge { margin-top: 6px; padding: 3px 8px; border-radius: 4px; display: inline-block; font-size: 8px; letter-spacing: 1px; font-weight: 700; }
+    .htf-bar { margin-top: 12px; padding-top: 12px; border-top: 1px solid #1a2a3a; display: flex; gap: 8px; align-items: center; }
+    .htf-label { font-size: 9px; color: #2a4a6a; letter-spacing: 2px; }
+    .htf-value { font-size: 12px; font-weight: 900; }
 
-    .tabs { display: flex; gap: 5px; margin-bottom: 10px; }
-    .tab {
-      flex: 1; padding: 9px 0; background: #0a1018; border: 1px solid #1a2a3a;
-      border-radius: 6px; color: #2a4a6a; font-family: 'Courier New', monospace;
-      font-size: 9px; letter-spacing: 1px; cursor: pointer; font-weight: 400;
-      transition: all 0.2s;
-    }
+    .tabs { display: flex; gap: 5px; margin-bottom: 10px; overflow-x: auto; }
+    .tab { flex: 1; min-width: 60px; padding: 9px 4px; background: #0a1018; border: 1px solid #1a2a3a; border-radius: 6px; color: #2a4a6a; font-family: 'Courier New', monospace; font-size: 8px; letter-spacing: 1px; cursor: pointer; font-weight: 400; white-space: nowrap; }
     .tab.active { background: #0a2a4a; border-color: #1a5a8a; color: #00d4ff; font-weight: 700; }
 
     .tab-content { display: none; }
@@ -134,53 +76,61 @@
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 7px; }
     .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 7px; }
 
-    .box {
-      background: #0a1018; border: 1px solid #1a2a3a; border-radius: 7px; padding: 11px 13px;
-    }
+    .box { background: #0a1018; border: 1px solid #1a2a3a; border-radius: 7px; padding: 11px 13px; margin-bottom: 0; }
     .box .box-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 5px; }
     .box .box-value { font-size: 13px; font-weight: 700; line-height: 1.5; }
     .box .box-value.small { font-size: 11px; }
 
+    .mb7 { margin-bottom: 7px; }
+
+    .ecurt-bar { background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px; padding: 14px; margin-bottom: 7px; }
+    .ecurt-bar .e-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 10px; }
+    .e-track { background: #060910; border-radius: 4px; height: 12px; margin-bottom: 6px; position: relative; overflow: hidden; }
+    .e-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+    .e-markers { display: flex; justify-content: space-between; font-size: 8px; color: #2a4a6a; }
+    .e-value { font-size: 28px; font-weight: 900; text-align: center; margin-top: 10px; }
+    .e-status { font-size: 12px; font-weight: 700; text-align: center; margin-top: 4px; }
+    .e-cross { text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #1a2a3a; font-size: 11px; font-weight: 700; }
+
+    .fib-table { background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px; padding: 14px; margin-bottom: 7px; }
+    .fib-table .fib-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 10px; }
+    .fib-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #0d1a25; }
+    .fib-row:last-child { border-bottom: none; }
+    .fib-level { font-size: 10px; color: #4a6a8a; }
+    .fib-price { font-size: 12px; font-weight: 700; }
+    .fib-active { background: #0a2a10; border-radius: 4px; padding: 2px 8px; font-size: 9px; color: #00e87a; }
+
+    .range-box { background: #0a1018; border: 1px solid #ffbb0033; border-radius: 8px; padding: 14px; margin-bottom: 7px; }
+    .range-box .r-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 12px; }
+    .range-levels { display: flex; justify-content: space-between; margin-bottom: 12px; }
+    .range-item { text-align: center; }
+    .range-item .ri-label { font-size: 9px; color: #2a4a6a; margin-bottom: 4px; }
+    .range-item .ri-value { font-size: 14px; font-weight: 700; }
+    .range-break { border-top: 1px solid #1a2a3a; padding-top: 10px; }
+    .range-break-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .rb-item { background: #060910; border-radius: 6px; padding: 10px; text-align: center; }
+    .rb-item .rb-label { font-size: 8px; letter-spacing: 1px; color: #2a4a6a; margin-bottom: 4px; }
+    .rb-item .rb-value { font-size: 12px; font-weight: 700; }
+
+    .ob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 7px; }
+    .ob-box { background: #0a1018; border-radius: 8px; padding: 13px; }
+    .ob-box .ob-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 8px; }
+    .ob-box .ob-zone { font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+    .ob-box .ob-status { font-size: 9px; font-weight: 700; }
+
     .amd-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 10px; }
-    .amd-box {
-      text-align: center; padding: 14px 6px;
-      background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px;
-      transition: all 0.2s;
-    }
+    .amd-box { text-align: center; padding: 14px 6px; background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px; }
     .amd-box.active-acc { background: #0a2a10; border-color: #00e87a; }
     .amd-box.active-man { background: #2a1000; border-color: #ff8800; }
     .amd-box.active-dis { background: #0a0a2a; border-color: #00d4ff; }
     .amd-box .amd-icon { font-size: 24px; margin-bottom: 5px; }
     .amd-box .amd-label { font-size: 8px; letter-spacing: 1px; }
 
-    .psy-bar { background: #0a1018; border: 1px solid #1a2a3a; border-radius: 8px; padding: 14px; margin-bottom: 7px; }
-    .psy-bar .psy-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 10px; }
-    .psy-track { background: #060910; border-radius: 4px; height: 10px; margin-bottom: 6px; position: relative; overflow: hidden; }
-    .psy-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
-    .psy-markers { display: flex; justify-content: space-between; font-size: 8px; color: #2a4a6a; }
-    .psy-value { font-size: 20px; font-weight: 900; text-align: center; margin-top: 8px; }
-    .psy-status { font-size: 11px; font-weight: 700; text-align: center; margin-top: 3px; }
-
-    .liq-map { background: #0a1018; border: 1px solid #ffbb0033; border-radius: 8px; padding: 14px; margin-bottom: 7px; }
-    .liq-map .liq-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 12px; }
-    .liq-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .liq-item { text-align: center; }
-    .liq-item .li-label { font-size: 9px; color: #2a4a6a; margin-bottom: 4px; }
-    .liq-item .li-value { font-size: 13px; font-weight: 700; }
-    .liq-sep { font-size: 20px; color: #1a3a5a; }
-    .hunt-box { border-top: 1px solid #1a2a3a; padding-top: 10px; }
-    .hunt-box .hunt-label { font-size: 9px; letter-spacing: 2px; color: #2a4a6a; margin-bottom: 5px; }
-    .hunt-box .hunt-value { font-size: 11px; font-weight: 700; color: #ffbb00; }
-
     .warn-box { background: #120f00; border: 1px solid #3a2a00; border-radius: 7px; padding: 11px 13px; margin-top: 7px; }
     .warn-box .warn-label { font-size: 9px; letter-spacing: 2px; color: #3a2a00; margin-bottom: 5px; }
     .warn-box .warn-value { font-size: 11px; color: #aa8800; line-height: 1.6; }
 
-    .disclaimer {
-      font-size: 9px; color: #1a2a3a; text-align: center;
-      letter-spacing: 1px; line-height: 1.8; margin-top: 16px;
-    }
-
+    .disclaimer { font-size: 9px; color: #1a2a3a; text-align: center; letter-spacing: 1px; line-height: 1.8; margin-top: 16px; }
     input[type="file"] { display: none; }
   </style>
 </head>
@@ -188,15 +138,30 @@
 
   <div class="header">
     <div class="sub">SCALPING SYSTEM · 15M + 5M</div>
-    <h1>TRADING ANALYZER PRO</h1>
-    <div class="tags">AMD · PSI ECURT 99 · LIQUIDEZ · EXPANSIÓN · ACUMULACIÓN</div>
+    <h1>TRADING BOT TJ</h1>
+    <div class="tags">ECURT 99 · FIBONACCI · ORDER BLOCKS · AMD · ACUMULACIÓN · EXPANSIÓN</div>
   </div>
 
   <!-- API KEY -->
   <div class="api-section">
     <label>▸ ANTHROPIC API KEY</label>
     <input type="password" id="apiKey" placeholder="sk-ant-..." />
-    <div class="api-hint">Obtén tu key gratis en <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
+    <div class="api-hint">Obtén tu key en <a href="https://platform.claude.com" target="_blank">platform.claude.com</a></div>
+  </div>
+
+  <!-- INSTRUCCIONES -->
+  <div class="instructions">
+    <div class="inst-title">▸ CÓMO SUBIR LOS GRÁFICOS</div>
+    <div class="inst-grid">
+      <div class="inst-item">
+        <div class="inst-tf">📊 15 MINUTOS</div>
+        <div class="inst-desc">Gráfico limpio con velas visibles. Muestra estructura general y zonas clave.</div>
+      </div>
+      <div class="inst-item">
+        <div class="inst-tf">🎯 5 MINUTOS</div>
+        <div class="inst-desc">Con ECURT 99 visible abajo. Muestra el indicador y las últimas velas de entrada.</div>
+      </div>
+    </div>
   </div>
 
   <!-- SELECTOR -->
@@ -208,14 +173,14 @@
 
   <!-- UPLOADS -->
   <div class="uploads">
-    <div class="uploads-label">SUBE TUS GRÁFICOS (máx. 2)</div>
+    <div class="uploads-label">SUBE TUS GRÁFICOS</div>
     <div class="upload-grid">
       <div>
         <div class="upload-zone" id="zone-15M" onclick="triggerUpload('15M')" ondrop="handleDrop(event,'15M')" ondragover="event.preventDefault()">
           <div class="upload-placeholder">
             <div class="icon">📊</div>
             <div class="label">15 MINUTOS</div>
-            <div class="hint">patrón · zonas · tendencia</div>
+            <div class="hint">Gráfico limpio<br>estructura general</div>
           </div>
         </div>
         <div class="upload-tf" id="tf-15M" style="color:#2a4a6a">15M</div>
@@ -226,7 +191,7 @@
           <div class="upload-placeholder">
             <div class="icon">🎯</div>
             <div class="label">5 MINUTOS</div>
-            <div class="hint">entrada · confirmación</div>
+            <div class="hint">Con ECURT 99<br>visible abajo</div>
           </div>
         </div>
         <div class="upload-tf" id="tf-5M" style="color:#2a4a6a">5M</div>
@@ -247,24 +212,32 @@
   <div class="results" id="results" style="display:none">
 
     <div class="hero" id="hero">
-      <div class="hero-left">
-        <div class="asset" id="r-asset">NASDAQ · 15M+5M</div>
-        <div class="signal" id="r-signal">—</div>
-        <div class="trend" id="r-trend">—</div>
-        <div class="rr" id="r-rr">—</div>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="asset" id="r-asset">—</div>
+          <div class="signal" id="r-signal">—</div>
+          <div class="trend" id="r-trend">—</div>
+          <div class="rr" id="r-rr">—</div>
+        </div>
+        <div class="hero-right">
+          <div class="conf-label">CONFIANZA</div>
+          <div class="conf-value" id="r-conf">—</div>
+          <div class="phase-badge" id="r-phase">—</div>
+        </div>
       </div>
-      <div class="hero-right">
-        <div class="conf-label">CONFIANZA</div>
-        <div class="conf-value" id="r-conf">—</div>
-        <div class="phase-badge" id="r-phase">—</div>
+      <div class="htf-bar">
+        <div class="htf-label">HTF BIAS →</div>
+        <div class="htf-value" id="r-htf">—</div>
+        <div style="margin-left:auto; font-size:9px; color:#2a4a6a" id="r-sesion">—</div>
       </div>
     </div>
 
+    <!-- TABS -->
     <div class="tabs">
       <button class="tab active" onclick="setTab('señal', this)">SEÑAL</button>
-      <button class="tab" onclick="setTab('mercado', this)">MERCADO</button>
-      <button class="tab" onclick="setTab('psi', this)">PSI 99</button>
-      <button class="tab" onclick="setTab('zonas', this)">ZONAS</button>
+      <button class="tab" onclick="setTab('ecurt', this)">ECURT 99</button>
+      <button class="tab" onclick="setTab('fibonacci', this)">FIBONACCI</button>
+      <button class="tab" onclick="setTab('zonas', this)">ZONAS/OB</button>
       <button class="tab" onclick="setTab('patron', this)">PATRÓN</button>
     </div>
 
@@ -276,65 +249,99 @@
         <div class="box"><div class="box-label">TAKE PROFIT 1 ▲</div><div class="box-value" style="color:#00e87a" id="r-tp1">—</div></div>
         <div class="box"><div class="box-label">TAKE PROFIT 2 ▲</div><div class="box-value" style="color:#00aa55" id="r-tp2">—</div></div>
       </div>
-      <div class="box" style="margin-bottom:7px"><div class="box-label">CONDICIÓN EXACTA DE ENTRADA</div><div class="box-value small" style="color:#ffbb00" id="r-condicion">—</div></div>
-      <div class="box"><div class="box-label">ANÁLISIS COMPLETO</div><div class="box-value small" id="r-analisis">—</div></div>
+      <div class="box mb7"><div class="box-label">CONDICIÓN EXACTA DE ENTRADA</div><div class="box-value small" style="color:#ffbb00" id="r-condicion">—</div></div>
+      <div class="box mb7"><div class="box-label">ANÁLISIS COMPLETO</div><div class="box-value small" id="r-analisis">—</div></div>
       <div class="warn-box" id="r-warn-box"><div class="warn-label">⚠ ADVERTENCIA</div><div class="warn-value" id="r-advertencia">—</div></div>
     </div>
 
-    <!-- TAB MERCADO -->
-    <div class="tab-content" id="tab-mercado">
-      <div class="grid2" style="margin-bottom:7px">
-        <div class="box" id="bias-15m-box"><div class="box-label">BIAS 15M</div><div class="box-value" id="r-bias15">—</div></div>
-        <div class="box" id="bias-5m-box"><div class="box-label">BIAS 5M</div><div class="box-value" id="r-bias5">—</div></div>
+    <!-- TAB ECURT 99 -->
+    <div class="tab-content" id="tab-ecurt">
+      <div class="ecurt-bar">
+        <div class="e-label">ECURT 99 — RSI + SMA</div>
+        <div class="e-track"><div class="e-fill" id="ecurt-fill" style="width:50%"></div></div>
+        <div class="e-markers"><span>SOBREVENTA (COMPRA)</span><span>NEUTRAL</span><span>SOBRECOMPRA (VENTA)</span></div>
+        <div class="e-value" id="ecurt-value">—</div>
+        <div class="e-status" id="ecurt-status">—</div>
+        <div class="e-cross" id="ecurt-cross">—</div>
       </div>
       <div class="grid2">
-        <div class="box"><div class="box-label">ESTRUCTURA</div><div class="box-value" style="color:#00d4ff" id="r-estructura">—</div></div>
-        <div class="box"><div class="box-label">CAMBIO ESTRUCTURA</div><div class="box-value small" style="color:#ffbb00" id="r-choch">—</div></div>
+        <div class="box"><div class="box-label">RSI ACTUAL</div><div class="box-value" id="ecurt-rsi">—</div></div>
+        <div class="box"><div class="box-label">SMA DEL RSI</div><div class="box-value" id="ecurt-sma">—</div></div>
       </div>
-      <div class="grid2">
-        <div class="box"><div class="box-label">FASE MERCADO</div><div class="box-value small" style="color:#aaff44" id="r-fase-mercado">—</div></div>
-        <div class="box"><div class="box-label">PRECIO ACTUAL</div><div class="box-value" id="r-precio">—</div></div>
-      </div>
-      <div class="box" style="margin-top:0"><div class="box-label">RESUMEN 15M</div><div class="box-value small" id="r-resumen15">—</div></div>
-      <div class="box" style="margin-top:7px"><div class="box-label">RESUMEN 5M</div><div class="box-value small" id="r-resumen5">—</div></div>
+      <div class="box mb7"><div class="box-label">POSICIÓN RSI vs SMA</div><div class="box-value small" style="color:#ffbb00" id="ecurt-pos">—</div></div>
+      <div class="box"><div class="box-label">INTERPRETACIÓN</div><div class="box-value small" id="ecurt-interp">—</div></div>
     </div>
 
-    <!-- TAB PSI -->
-    <div class="tab-content" id="tab-psi">
-      <div class="psy-bar">
-        <div class="psy-label">PSI ECURT 99 — ÍNDICE DE PRESIÓN</div>
-        <div class="psy-track"><div class="psy-fill" id="psi-fill" style="width:50%"></div></div>
-        <div class="psy-markers"><span>SOBREVENTA</span><span>NEUTRAL</span><span>SOBRECOMPRA</span></div>
-        <div class="psy-value" id="psi-value">—</div>
-        <div class="psy-status" id="psi-status">—</div>
+    <!-- TAB FIBONACCI -->
+    <div class="tab-content" id="tab-fibonacci">
+      <div class="grid2 mb7">
+        <div class="box"><div class="box-label">SWING HIGH</div><div class="box-value" style="color:#ff3355" id="fib-high">—</div></div>
+        <div class="box"><div class="box-label">SWING LOW</div><div class="box-value" style="color:#00e87a" id="fib-low">—</div></div>
       </div>
-      <div class="grid2">
-        <div class="box"><div class="box-label">SEÑAL PSI</div><div class="box-value small" id="psi-signal">—</div></div>
-        <div class="box"><div class="box-label">ZONA</div><div class="box-value small" id="psi-zone">—</div></div>
-      </div>
-      <div class="box" style="margin-bottom:7px"><div class="box-label">INTERPRETACIÓN</div><div class="box-value small" id="psi-interp">—</div></div>
-      <div class="liq-map">
-        <div class="liq-label">LIQUIDEZ Y STOPS</div>
-        <div class="liq-row">
-          <div class="liq-item"><div class="li-label">STOPS ARRIBA</div><div class="li-value" style="color:#ff3355" id="r-liq-up">—</div></div>
-          <div class="liq-sep">⟷</div>
-          <div class="liq-item"><div class="li-label">STOPS ABAJO</div><div class="li-value" style="color:#00e87a" id="r-liq-down">—</div></div>
+      <div class="fib-table">
+        <div class="fib-label">NIVELES DE FIBONACCI</div>
+        <div class="fib-row">
+          <span class="fib-level">0.236</span>
+          <span class="fib-price" id="fib-236">—</span>
+          <span id="fib-236-tag"></span>
         </div>
-        <div class="hunt-box"><div class="hunt-label">CACERÍA RECIENTE</div><div class="hunt-value" id="r-hunt">—</div></div>
+        <div class="fib-row">
+          <span class="fib-level">0.382</span>
+          <span class="fib-price" id="fib-382">—</span>
+          <span id="fib-382-tag"></span>
+        </div>
+        <div class="fib-row">
+          <span class="fib-level">0.500</span>
+          <span class="fib-price" id="fib-500">—</span>
+          <span id="fib-500-tag"></span>
+        </div>
+        <div class="fib-row">
+          <span class="fib-level">0.618 ⭐</span>
+          <span class="fib-price" id="fib-618">—</span>
+          <span id="fib-618-tag"></span>
+        </div>
+        <div class="fib-row">
+          <span class="fib-level">0.786</span>
+          <span class="fib-price" id="fib-786">—</span>
+          <span id="fib-786-tag"></span>
+        </div>
       </div>
+      <div class="box"><div class="box-label">PRECIO EN ZONA FIB</div><div class="box-value small" style="color:#00d4ff" id="fib-zona">—</div></div>
     </div>
 
-    <!-- TAB ZONAS -->
+    <!-- TAB ZONAS/OB -->
     <div class="tab-content" id="tab-zonas">
+      <div class="range-box">
+        <div class="r-label">RANGO DE ACUMULACIÓN ACTUAL</div>
+        <div class="range-levels">
+          <div class="range-item"><div class="ri-label">HIGH DEL RANGO</div><div class="ri-value" style="color:#ff3355" id="r-range-high">—</div></div>
+          <div class="range-item"><div class="ri-label">LOW DEL RANGO</div><div class="ri-value" style="color:#00e87a" id="r-range-low">—</div></div>
+        </div>
+        <div class="range-break">
+          <div style="font-size:9px; letter-spacing:2px; color:#2a4a6a">NIVELES CLAVE</div>
+          <div class="range-break-grid">
+            <div class="rb-item"><div class="rb-label">ENTRA SI ROMPE ▲</div><div class="rb-value" style="color:#00e87a" id="r-break-up">—</div></div>
+            <div class="rb-item"><div class="rb-label">INVÁLIDO SI ROMPE ▼</div><div class="rb-value" style="color:#ff3355" id="r-break-down">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ob-grid">
+        <div class="ob-box" style="border: 1px solid #00e87a33;">
+          <div class="ob-label">ORDER BLOCK ALCISTA</div>
+          <div class="ob-zone" style="color:#00e87a" id="ob-bull-zone">—</div>
+          <div class="ob-status" id="ob-bull-status">—</div>
+        </div>
+        <div class="ob-box" style="border: 1px solid #ff335533;">
+          <div class="ob-label">ORDER BLOCK BAJISTA</div>
+          <div class="ob-zone" style="color:#ff3355" id="ob-bear-zone">—</div>
+          <div class="ob-status" id="ob-bear-status">—</div>
+        </div>
+      </div>
+
       <div class="grid2">
         <div class="box"><div class="box-label">SOPORTE 1</div><div class="box-value" style="color:#00e87a" id="r-sup1">—</div></div>
         <div class="box"><div class="box-label">RESISTENCIA 1</div><div class="box-value" style="color:#ff3355" id="r-res1">—</div></div>
-        <div class="box"><div class="box-label">SOPORTE 2</div><div class="box-value" style="color:#00aa55" id="r-sup2">—</div></div>
-        <div class="box"><div class="box-label">RESISTENCIA 2</div><div class="box-value" style="color:#aa2244" id="r-res2">—</div></div>
-      </div>
-      <div class="grid2">
-        <div class="box"><div class="box-label">DOBLE PISO</div><div class="box-value small" style="color:#00e87a" id="r-dbottom">—</div></div>
-        <div class="box"><div class="box-label">DOBLE TECHO</div><div class="box-value small" style="color:#ff3355" id="r-dtop">—</div></div>
         <div class="box"><div class="box-label">ZONA DEMANDA</div><div class="box-value small" style="color:#00aa55" id="r-demand">—</div></div>
         <div class="box"><div class="box-label">ZONA OFERTA</div><div class="box-value small" style="color:#aa2244" id="r-supply">—</div></div>
       </div>
@@ -344,36 +351,152 @@
     <!-- TAB PATRÓN -->
     <div class="tab-content" id="tab-patron">
       <div class="amd-grid">
-        <div class="amd-box" id="amd-acc">
-          <div class="amd-icon">📦</div>
-          <div class="amd-label" style="color:#2a4a6a">ACCUMUL.</div>
-        </div>
-        <div class="amd-box" id="amd-man">
-          <div class="amd-icon">🪤</div>
-          <div class="amd-label" style="color:#2a4a6a">MANIPUL.</div>
-        </div>
-        <div class="amd-box" id="amd-dis">
-          <div class="amd-icon">🚀</div>
-          <div class="amd-label" style="color:#2a4a6a">DISTRIB.</div>
-        </div>
+        <div class="amd-box" id="amd-acc"><div class="amd-icon">📦</div><div class="amd-label" style="color:#2a4a6a">ACCUMUL.</div></div>
+        <div class="amd-box" id="amd-man"><div class="amd-icon">🪤</div><div class="amd-label" style="color:#2a4a6a">MANIPUL.</div></div>
+        <div class="amd-box" id="amd-dis"><div class="amd-icon">🚀</div><div class="amd-label" style="color:#2a4a6a">DISTRIB.</div></div>
       </div>
-      <div class="box" style="margin-bottom:7px"><div class="box-label">PATRÓN DETECTADO</div><div class="box-value" style="color:#aaff44" id="r-patron">—</div></div>
-      <div class="box" style="margin-bottom:7px"><div class="box-label">FASE ACTUAL</div><div class="box-value" style="color:#ffbb00" id="r-fase">—</div></div>
-      <div class="box" style="margin-bottom:7px"><div class="box-label">EXPANSIÓN O ACUMULACIÓN</div><div class="box-value small" style="color:#00d4ff" id="r-expac">—</div></div>
-      <div class="box" id="r-vela-box" style="margin-bottom:7px"><div class="box-label">VELA CONFIRMACIÓN (5M)</div><div class="box-value" style="color:#ffbb00" id="r-vela">—</div></div>
+      <div class="box mb7"><div class="box-label">FASE ACTUAL</div><div class="box-value" style="color:#ffbb00" id="r-fase">—</div></div>
+      <div class="box mb7"><div class="box-label">EXPANSIÓN O ACUMULACIÓN</div><div class="box-value small" style="color:#00d4ff" id="r-expac">—</div></div>
+      <div class="box mb7"><div class="box-label">LIQUIDEZ ARRIBA</div><div class="box-value small" style="color:#ff3355" id="r-liq-up">—</div></div>
+      <div class="box mb7"><div class="box-label">LIQUIDEZ ABAJO</div><div class="box-value small" style="color:#00e87a" id="r-liq-down">—</div></div>
       <div class="box"><div class="box-label">DESCRIPCIÓN DEL PATRÓN</div><div class="box-value small" id="r-patron-desc">—</div></div>
     </div>
 
-    <div class="disclaimer">
-      ANÁLISIS INFORMATIVO · NO ES ASESORÍA FINANCIERA<br>
-      EL TRADING CONLLEVA RIESGO DE PÉRDIDA DE CAPITAL
-    </div>
+    <div class="disclaimer">ANÁLISIS INFORMATIVO · NO ES ASESORÍA FINANCIERA<br>EL TRADING CONLLEVA RIESGO DE PÉRDIDA DE CAPITAL</div>
   </div>
 
 <script>
 let activo = 'AUTO';
 let images = { '15M': null, '5M': null };
 let mimes = { '15M': 'image/png', '5M': 'image/png' };
+
+const PROMPT = `Eres un trader experto institucional especializado en Scalping de ORO (XAU/USD) y NASDAQ (NAS100).
+
+El usuario sube 2 imágenes:
+- Imagen 1: Gráfico 15 minutos (estructura general)
+- Imagen 2: Gráfico 5 minutos CON el indicador ECURT 99 visible (RSI línea morada + SMA línea roja)
+
+REGLAS DE ANÁLISIS:
+
+1. HTF BIAS
+- Determina si el mercado en higher timeframe está ALCISTA, BAJISTA o LATERAL
+- Solo das señal de COMPRA si HTF alcista, VENTA si HTF bajista
+- Esto es la base de todo
+
+2. ECURT 99 (RSI + SMA visible en el gráfico 5M)
+- La línea MORADA es el RSI
+- La línea ROJA es la SMA del RSI
+- Cuando la línea morada está MUY ABAJO y cruza por debajo de la roja → SOBREVENTA → señal de COMPRA potencial
+- Cuando la línea morada está MUY ARRIBA y cruza por encima de la roja → SOBRECOMPRA → señal de VENTA potencial
+- Estima el valor actual del RSI y la SMA basándote en lo que ves visualmente
+- Identifica si hay un cruce reciente o si está a punto de cruzar
+
+3. FIBONACCI
+- Identifica el swing high y swing low más recientes y relevantes en el gráfico
+- Calcula los niveles: 0.236, 0.382, 0.500, 0.618, 0.786
+- El nivel 0.618 es el más importante (zona de oro)
+- Determina en qué nivel de fibo está el precio ahora mismo
+- Si el precio está en 0.618 o 0.786 con ECURT sobrevendido y HTF alcista = señal muy fuerte
+
+4. RANGO DE ACUMULACIÓN
+- Identifica el rango lateral más reciente que está formando el precio
+- Marca el HIGH exacto del rango y el LOW exacto del rango
+- Si el HTF está alcista: entrada cuando rompa el HIGH del rango hacia arriba
+- Si el HTF está bajista: entrada cuando rompa el LOW del rango hacia abajo
+- Si rompe en dirección contraria al HTF: trade INVÁLIDO, no entrar
+
+5. ORDER BLOCKS
+- Identifica el último Order Block alcista relevante (zona donde institucionales compraron antes de un movimiento alcista)
+- Identifica el último Order Block bajista (zona donde institucionales vendieron antes de un movimiento bajista)
+- Indica si está mitigado o no mitigado
+- Un OB no mitigado es zona clave de reacción
+
+6. SEÑAL FINAL
+REGLA CRÍTICA - MANIPULACIÓN vs DISTRIBUCIÓN: HTF ALCISTA + vela bajista fuerte ÚNICA = MANIPULACIÓN → buscar COMPRA en el rebote NO venta. HTF BAJISTA + velas bajistas MÚLTIPLES = DISTRIBUCIÓN REAL → VENTA. NUNCA dar VENTA si HTF alcista por una sola vela bajista grande.
+- Para COMPRA: HTF alcista + ECURT sobrevendido + precio en fibo 0.618/0.786 o en OB alcista + rango formado o manipulación detectada
+- Para VENTA: HTF bajista + ECURT sobrecomprado + precio en fibo 0.618/0.786 o en OB bajista + rango formado
+- Condición exacta: precio que debe romper para entrar
+- Si no se cumplen al menos 3 condiciones → ESPERAR
+
+Responde ÚNICAMENTE en este JSON exacto, sin texto extra, sin markdown, sin backticks:
+
+{
+  "activo": "ORO" o "NASDAQ",
+  "señal": "COMPRA" o "VENTA" o "ESPERAR",
+  "confianza": número 0-100,
+
+  "htf": {
+    "bias": "ALCISTA" o "BAJISTA" o "LATERAL",
+    "estructura": "HH/HL" o "LH/LL" o "RANGO",
+    "sesion": "NY" o "ASIA" o "LONDON" o "NO IDENTIFICADA",
+    "confirmado": true o false
+  },
+
+  "ecurt": {
+    "rsi_valor": número estimado 0-100,
+    "sma_valor": número estimado 0-100,
+    "estado": "SOBREVENTA" o "NEUTRAL" o "SOBRECOMPRA",
+    "cruce": "CRUCE ALCISTA RECIENTE" o "CRUCE BAJISTA RECIENTE" o "A PUNTO DE CRUZAR ALCISTA" o "A PUNTO DE CRUZAR BAJISTA" o "Sin cruce",
+    "posicion": "RSI POR DEBAJO DE SMA" o "RSI POR ENCIMA DE SMA",
+    "señal": "COMPRA" o "VENTA" o "NEUTRAL",
+    "interpretacion": "explicación de lo que muestra el ECURT en 1-2 oraciones"
+  },
+
+  "fibonacci": {
+    "swing_high": "precio",
+    "swing_low": "precio",
+    "nivel_236": "precio",
+    "nivel_382": "precio",
+    "nivel_500": "precio",
+    "nivel_618": "precio",
+    "nivel_786": "precio",
+    "precio_actual_fib": "en qué nivel está el precio ahora",
+    "zona_relevante": "descripción de la zona fib más importante ahora"
+  },
+
+  "rango": {
+    "high": "precio del high del rango",
+    "low": "precio del low del rango",
+    "entrada_alcista": "precio exacto para entrar si rompe arriba",
+    "invalidacion": "precio exacto donde el trade se invalida",
+    "estado": "ACUMULACIÓN" o "EXPANSIÓN" o "DISTRIBUCIÓN"
+  },
+
+  "order_blocks": {
+    "ob_alcista_zona": "rango de precio del OB alcista",
+    "ob_alcista_estado": "NO MITIGADO" o "MITIGADO",
+    "ob_bajista_zona": "rango de precio del OB bajista",
+    "ob_bajista_estado": "NO MITIGADO" o "MITIGADO"
+  },
+
+  "zonas": {
+    "soporte_1": "precio",
+    "resistencia_1": "precio",
+    "zona_demanda": "rango",
+    "zona_oferta": "rango",
+    "fvg": "rango o Ninguno",
+    "liquidez_arriba": "nivel",
+    "liquidez_abajo": "nivel"
+  },
+
+  "patron_amd": {
+    "fase": "Accumulation" o "Manipulation" o "Distribution",
+    "descripcion": "descripción en 2 oraciones",
+    "expansion_acumulacion": "EXPANSIÓN" o "ACUMULACIÓN"
+  },
+
+  "operacion": {
+    "entrada": "precio exacto",
+    "tp1": "take profit 1",
+    "tp2": "take profit 2",
+    "sl": "stop loss",
+    "riesgo_beneficio": "ratio",
+    "condicion": "condición exacta — qué precio debe romper y con qué confirmación"
+  },
+
+  "analisis": "Análisis completo en 4-5 oraciones integrando HTF bias, ECURT, fibonacci, rango y OB. Muy específico con precios.",
+  "advertencia": "riesgo importante o condición antes de entrar"
+}`;
 
 function setActivo(a, btn) {
   activo = a;
@@ -382,17 +505,8 @@ function setActivo(a, btn) {
 }
 
 function triggerUpload(tf) { document.getElementById('file-' + tf).click(); }
-
-function handleDrop(e, tf) {
-  e.preventDefault();
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) loadFile(tf, file);
-}
-
-function handleFile(e, tf) {
-  const file = e.target.files[0];
-  if (file) loadFile(tf, file);
-}
+function handleDrop(e, tf) { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f && f.type.startsWith('image/')) loadFile(tf, f); }
+function handleFile(e, tf) { const f = e.target.files[0]; if (f) loadFile(tf, f); }
 
 function loadFile(tf, file) {
   mimes[tf] = file.type || 'image/png';
@@ -413,10 +527,10 @@ function removeImage(tf, e) {
   e.stopPropagation();
   images[tf] = null;
   const zone = document.getElementById('zone-' + tf);
-  const placeholder = tf === '15M'
-    ? `<div class="upload-placeholder"><div class="icon">📊</div><div class="label">15 MINUTOS</div><div class="hint">patrón · zonas · tendencia</div></div>`
-    : `<div class="upload-placeholder"><div class="icon">🎯</div><div class="label">5 MINUTOS</div><div class="hint">entrada · confirmación</div></div>`;
-  zone.innerHTML = placeholder;
+  const ph = tf === '15M'
+    ? `<div class="upload-placeholder"><div class="icon">📊</div><div class="label">15 MINUTOS</div><div class="hint">Gráfico limpio<br>estructura general</div></div>`
+    : `<div class="upload-placeholder"><div class="icon">🎯</div><div class="label">5 MINUTOS</div><div class="hint">Con ECURT 99<br>visible abajo</div></div>`;
+  zone.innerHTML = ph;
   zone.classList.remove('has-image');
   document.getElementById('tf-' + tf).style.color = '#2a4a6a';
   document.getElementById('tf-' + tf).textContent = tf;
@@ -431,9 +545,7 @@ function updateUI() {
 }
 
 function clearAll() {
-  ['15M', '5M'].forEach(tf => {
-    if (images[tf]) removeImage(tf, { stopPropagation: () => {} });
-  });
+  ['15M', '5M'].forEach(tf => { if (images[tf]) removeImage(tf, { stopPropagation: () => {} }); });
   document.getElementById('results').style.display = 'none';
   document.getElementById('error-box').style.display = 'none';
   updateUI();
@@ -446,20 +558,13 @@ function setTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
 }
 
-function trendIcon(t) { return t === 'ALCISTA' ? '↑' : t === 'BAJISTA' ? '↓' : '→'; }
-function trendColor(t) { return t === 'ALCISTA' ? '#00e87a' : t === 'BAJISTA' ? '#ff3355' : '#ffbb00'; }
-function signalColor(s) { return s === 'COMPRA' ? '#00e87a' : s === 'VENTA' ? '#ff3355' : '#ffbb00'; }
-
-function getPsiColor(val) {
-  if (val >= 70) return '#ff3355';
-  if (val <= 30) return '#00e87a';
-  return '#ffbb00';
-}
+function sc(s) { return s === 'COMPRA' ? '#00e87a' : s === 'VENTA' ? '#ff3355' : '#ffbb00'; }
+function tc(t) { return t === 'ALCISTA' ? '#00e87a' : t === 'BAJISTA' ? '#ff3355' : '#ffbb00'; }
+function ti(t) { return t === 'ALCISTA' ? '↑' : t === 'BAJISTA' ? '↓' : '→'; }
 
 async function analyze() {
   const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) { showError('⚠ Ingresa tu API Key de Anthropic primero.'); return; }
-
+  if (!apiKey) { showError('⚠ Ingresa tu API Key primero.'); return; }
   const available = Object.entries(images).filter(([,v]) => v);
   if (!available.length) return;
 
@@ -468,158 +573,26 @@ async function analyze() {
   document.getElementById('error-box').style.display = 'none';
   document.getElementById('results').style.display = 'none';
 
-  const PROMPT = `Eres un trader experto institucional especializado en Scalping de ORO (XAU/USD) y NASDAQ (NAS100).
-
-El usuario te manda imágenes de gráficos: primera imagen es 15 minutos, segunda imagen (si existe) es 5 minutos.
-
-Analiza con estos conceptos:
-
-1. TENDENCIA Y ESTRUCTURA
-- Bias 15M y 5M: ALCISTA, BAJISTA o LATERAL
-- Estructura: HH/HL (alcista), LH/LL (bajista), RANGO
-- Cambio de estructura: CHoCH o BOS
-
-2. PSI ECURT 99 (Índice de Presión)
-- Estima un valor de 0-100 basado en momentum, posición relativa del precio y presión compradora/vendedora
-- 0-30: SOBREVENTA (señal de compra potencial)
-- 31-69: NEUTRAL
-- 70-100: SOBRECOMPRA (señal de venta potencial)
-- Interpreta si el PSI confirma o contradice la señal
-
-3. EXPANSIÓN vs ACUMULACIÓN
-- EXPANSIÓN: precio moviéndose con fuerza, velas grandes, rompimientos de niveles clave
-- ACUMULACIÓN: precio en rango, velas pequeñas, lateralización, indecisión antes del movimiento
-
-4. PATRÓN AMD (solo NASDAQ)
-- Accumulation: rango lateral, acumulación institucional
-- Manipulation: fake breakout, barrido de liquidez
-- Distribution: movimiento real tras la manipulación
-
-5. DOBLE ROMPIMIENTO (solo ORO)
-- Primer Rompimiento → Retesteo → Confirmado
-
-6. ZONAS Y LIQUIDEZ
-- Soportes y resistencias clave
-- Dobles pisos / techos
-- FVG (Fair Value Gap)
-- Zonas de liquidez (stops hunting)
-
-7. OPERACIÓN SCALPING
-- Entrada exacta en 5M
-- TP1 y TP2
-- SL ajustado
-- Ratio R:R
-
-Responde ÚNICAMENTE en este JSON, sin texto extra, sin markdown, sin backticks:
-
-{
-  "activo": "ORO" o "NASDAQ",
-  "señal": "COMPRA" o "VENTA" o "ESPERAR",
-  "confianza": número 0-100,
-
-  "mercado": {
-    "bias_15m": "ALCISTA" o "BAJISTA" o "LATERAL",
-    "bias_5m": "ALCISTA" o "BAJISTA" o "LATERAL",
-    "estructura": "HH/HL" o "LH/LL" o "RANGO",
-    "cambio_estructura": "CHoCH" o "BOS" o "Ninguno",
-    "precio_actual": "precio visible",
-    "fase_mercado": "EXPANSIÓN" o "ACUMULACIÓN" o "DISTRIBUCIÓN",
-    "resumen_15m": "qué muestra el 15M en 1-2 oraciones",
-    "resumen_5m": "qué muestra el 5M en 1-2 oraciones o No disponible"
-  },
-
-  "psi": {
-    "valor": número 0-100,
-    "estado": "SOBREVENTA" o "NEUTRAL" o "SOBRECOMPRA",
-    "señal": "COMPRA" o "VENTA" o "NEUTRAL",
-    "zona": "zona de precio donde está el PSI",
-    "interpretacion": "cómo el PSI confirma o contradice la señal en 1-2 oraciones"
-  },
-
-  "expansion_acumulacion": {
-    "estado": "EXPANSIÓN" o "ACUMULACIÓN",
-    "descripcion": "descripción de lo que está haciendo el precio en 2 oraciones"
-  },
-
-  "patron": {
-    "nombre": "AMD" o "Doble Rompimiento" o "Otro",
-    "fase": "Accumulation" o "Manipulation" o "Distribution" o "Primer Rompimiento" o "Retesteo" o "Confirmado",
-    "vela_confirmacion": "nombre del patrón de vela o Ninguno",
-    "descripcion": "descripción en 2 oraciones"
-  },
-
-  "zonas": {
-    "soporte_1": "precio",
-    "soporte_2": "precio o Ninguno",
-    "resistencia_1": "precio",
-    "resistencia_2": "precio o Ninguno",
-    "double_bottom": "precio o Ninguno",
-    "double_top": "precio o Ninguno",
-    "fvg": "rango o Ninguno",
-    "zona_demanda": "rango",
-    "zona_oferta": "rango"
-  },
-
-  "liquidez": {
-    "stops_arriba": "nivel",
-    "stops_abajo": "nivel",
-    "caceria_reciente": "descripción o Ninguno"
-  },
-
-  "operacion": {
-    "entrada": "precio exacto",
-    "tp1": "take profit 1",
-    "tp2": "take profit 2",
-    "sl": "stop loss",
-    "riesgo_beneficio": "ratio",
-    "condicion": "condición exacta para entrar"
-  },
-
-  "analisis": "Análisis completo en 4-5 oraciones integrando tendencia, PSI, patrón y zonas.",
-  "advertencia": "riesgo importante o condición antes de entrar"
-}`;
-
   try {
     const content = [];
-    const tfLabels = { '15M': '15 MINUTOS', '5M': '5 MINUTOS' };
+    const tfLabels = { '15M': '15 MINUTOS - ESTRUCTURA GENERAL', '5M': '5 MINUTOS - CON ECURT 99 VISIBLE' };
     for (const [tf, data] of available) {
       content.push({ type: 'text', text: `--- GRÁFICO ${tfLabels[tf]} ---` });
       content.push({ type: 'image', source: { type: 'base64', media_type: mimes[tf], data } });
     }
-    content.push({
-      type: 'text',
-      text: activo === 'AUTO'
-        ? 'Analiza estos gráficos con análisis institucional completo incluyendo PSI ECURT 99, AMD, expansión/acumulación.'
-        : `Gráficos de ${activo}. Analiza con PSI ECURT 99 y ${activo === 'NASDAQ' ? 'patrón AMD' : 'Doble Rompimiento'}.`
-    });
+    content.push({ type: 'text', text: activo === 'AUTO' ? 'Analiza estos gráficos con mi estrategia completa: HTF bias, ECURT 99, Fibonacci, rango de acumulación y Order Blocks.' : `Gráficos de ${activo}. Analiza con HTF bias, ECURT 99, Fibonacci, rango y Order Blocks.` });
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        system: PROMPT,
-        messages: [{ role: 'user', content }]
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, system: PROMPT, messages: [{ role: 'user', content }] })
     });
 
-    if (!res.ok) {
-      const e = await res.json();
-      throw new Error(e?.error?.message || 'Error API ' + res.status);
-    }
-
+    if (!res.ok) { const e = await res.json(); throw new Error(e?.error?.message || 'Error ' + res.status); }
     const data = await res.json();
     const text = data.content.map(i => i.text || '').join('');
     const clean = text.replace(/```json|```/g, '').trim();
-    const r = JSON.parse(clean);
-    renderResult(r);
-
+    renderResult(JSON.parse(clean));
   } catch (err) {
     showError('⚠ ' + err.message);
   } finally {
@@ -630,26 +603,29 @@ Responde ÚNICAMENTE en este JSON, sin texto extra, sin markdown, sin backticks:
 }
 
 function renderResult(r) {
-  const sc = signalColor(r.señal);
+  const color = sc(r.señal);
 
   // Hero
-  document.getElementById('hero').style.background = `linear-gradient(135deg, #0a1018, ${sc}08)`;
-  document.getElementById('hero').style.border = `1px solid ${sc}33`;
-  document.getElementById('r-asset').textContent = `${r.activo} · 15M+5M · ${r.mercado?.precio_actual || ''}`;
+  document.getElementById('hero').style.background = `linear-gradient(135deg, #0a1018, ${color}08)`;
+  document.getElementById('hero').style.border = `1px solid ${color}33`;
+  document.getElementById('r-asset').textContent = `${r.activo} · 15M + 5M`;
   document.getElementById('r-signal').textContent = r.señal;
-  document.getElementById('r-signal').style.color = sc;
-  document.getElementById('r-trend').textContent = `${trendIcon(r.mercado?.bias_15m)} ${r.mercado?.bias_15m}`;
-  document.getElementById('r-trend').style.color = trendColor(r.mercado?.bias_15m);
+  document.getElementById('r-signal').style.color = color;
+  document.getElementById('r-trend').textContent = `${ti(r.htf?.bias)} ${r.htf?.bias} · ${r.htf?.estructura}`;
+  document.getElementById('r-trend').style.color = tc(r.htf?.bias);
   document.getElementById('r-rr').textContent = `R:R ${r.operacion?.riesgo_beneficio}`;
   document.getElementById('r-conf').textContent = r.confianza + '%';
-  document.getElementById('r-conf').style.color = sc;
+  document.getElementById('r-conf').style.color = color;
+  document.getElementById('r-htf').textContent = `${ti(r.htf?.bias)} ${r.htf?.bias}`;
+  document.getElementById('r-htf').style.color = tc(r.htf?.bias);
+  document.getElementById('r-sesion').textContent = r.htf?.sesion || '';
 
-  const phase = r.mercado?.fase_mercado || '';
+  const phase = r.rango?.estado || '';
   const phaseEl = document.getElementById('r-phase');
   phaseEl.textContent = phase;
-  phaseEl.style.background = phase === 'EXPANSIÓN' ? '#00d4ff22' : phase === 'ACUMULACIÓN' ? '#ffbb0022' : '#ff335522';
-  phaseEl.style.border = `1px solid ${phase === 'EXPANSIÓN' ? '#00d4ff44' : phase === 'ACUMULACIÓN' ? '#ffbb0044' : '#ff335544'}`;
-  phaseEl.style.color = phase === 'EXPANSIÓN' ? '#00d4ff' : phase === 'ACUMULACIÓN' ? '#ffbb00' : '#ff3355';
+  phaseEl.style.background = phase === 'EXPANSIÓN' ? '#00d4ff22' : '#ffbb0022';
+  phaseEl.style.border = `1px solid ${phase === 'EXPANSIÓN' ? '#00d4ff44' : '#ffbb0044'}`;
+  phaseEl.style.color = phase === 'EXPANSIÓN' ? '#00d4ff' : '#ffbb00';
 
   // Señal
   setText('r-entrada', r.operacion?.entrada);
@@ -661,81 +637,79 @@ function renderResult(r) {
   setText('r-advertencia', r.advertencia);
   document.getElementById('r-warn-box').style.display = r.advertencia ? 'block' : 'none';
 
-  // Mercado
-  const b15 = r.mercado?.bias_15m;
-  const b5 = r.mercado?.bias_5m;
-  document.getElementById('r-bias15').textContent = `${trendIcon(b15)} ${b15}`;
-  document.getElementById('r-bias15').style.color = trendColor(b15);
-  document.getElementById('r-bias5').textContent = `${trendIcon(b5)} ${b5}`;
-  document.getElementById('r-bias5').style.color = trendColor(b5);
-  setText('r-estructura', r.mercado?.estructura);
-  setText('r-choch', r.mercado?.cambio_estructura);
-  setText('r-fase-mercado', r.mercado?.fase_mercado);
-  setText('r-precio', r.mercado?.precio_actual);
-  setText('r-resumen15', r.mercado?.resumen_15m);
-  setText('r-resumen5', r.mercado?.resumen_5m);
+  // ECURT
+  const ecurtVal = r.ecurt?.rsi_valor || 50;
+  const ecurtColor = ecurtVal <= 30 ? '#00e87a' : ecurtVal >= 70 ? '#ff3355' : '#ffbb00';
+  document.getElementById('ecurt-fill').style.width = ecurtVal + '%';
+  document.getElementById('ecurt-fill').style.background = `linear-gradient(90deg, #00e87a, ${ecurtColor})`;
+  document.getElementById('ecurt-value').textContent = ecurtVal;
+  document.getElementById('ecurt-value').style.color = ecurtColor;
+  document.getElementById('ecurt-status').textContent = r.ecurt?.estado;
+  document.getElementById('ecurt-status').style.color = ecurtColor;
+  document.getElementById('ecurt-cross').textContent = r.ecurt?.cruce || '—';
+  document.getElementById('ecurt-cross').style.color = r.ecurt?.cruce?.includes('ALCISTA') ? '#00e87a' : r.ecurt?.cruce?.includes('BAJISTA') ? '#ff3355' : '#ffbb00';
+  setText('ecurt-rsi', r.ecurt?.rsi_valor);
+  setText('ecurt-sma', r.ecurt?.sma_valor);
+  setText('ecurt-pos', r.ecurt?.posicion);
+  setText('ecurt-interp', r.ecurt?.interpretacion);
 
-  // PSI
-  const psiVal = r.psi?.valor || 50;
-  const psiColor = getPsiColor(psiVal);
-  document.getElementById('psi-fill').style.width = psiVal + '%';
-  document.getElementById('psi-fill').style.background = `linear-gradient(90deg, #00e87a, ${psiColor})`;
-  document.getElementById('psi-value').textContent = psiVal;
-  document.getElementById('psi-value').style.color = psiColor;
-  document.getElementById('psi-status').textContent = r.psi?.estado;
-  document.getElementById('psi-status').style.color = psiColor;
-  setText('psi-signal', r.psi?.señal);
-  setText('psi-zone', r.psi?.zona);
-  setText('psi-interp', r.psi?.interpretacion);
-  setText('r-liq-up', r.liquidez?.stops_arriba);
-  setText('r-liq-down', r.liquidez?.stops_abajo);
-  setText('r-hunt', r.liquidez?.caceria_reciente);
+  // Fibonacci
+  setText('fib-high', r.fibonacci?.swing_high);
+  setText('fib-low', r.fibonacci?.swing_low);
+  const fibLevels = { '236': r.fibonacci?.nivel_236, '382': r.fibonacci?.nivel_382, '500': r.fibonacci?.nivel_500, '618': r.fibonacci?.nivel_618, '786': r.fibonacci?.nivel_786 };
+  const currentFib = r.fibonacci?.precio_actual_fib || '';
+  Object.entries(fibLevels).forEach(([key, val]) => {
+    const el = document.getElementById('fib-' + key);
+    if (el) { el.textContent = val || '—'; el.style.color = key === '618' ? '#ffd700' : '#b0c4d8'; }
+    const tag = document.getElementById('fib-' + key + '-tag');
+    if (tag) { tag.textContent = currentFib.includes('0.' + key.slice(0,1) + key.slice(1)) ? '◄ AQUÍ' : ''; tag.className = currentFib.includes(key) ? 'fib-active' : ''; }
+  });
+  setText('fib-zona', r.fibonacci?.zona_relevante);
+
+  // Rango
+  setText('r-range-high', r.rango?.high);
+  setText('r-range-low', r.rango?.low);
+  setColor('r-break-up', r.rango?.entrada_alcista, '#00e87a');
+  setColor('r-break-down', r.rango?.invalidacion, '#ff3355');
+
+  // Order Blocks
+  setText('ob-bull-zone', r.order_blocks?.ob_alcista_zona);
+  const obBullStatus = r.order_blocks?.ob_alcista_estado;
+  document.getElementById('ob-bull-status').textContent = obBullStatus || '—';
+  document.getElementById('ob-bull-status').style.color = obBullStatus === 'NO MITIGADO' ? '#00e87a' : '#4a6a8a';
+  setText('ob-bear-zone', r.order_blocks?.ob_bajista_zona);
+  const obBearStatus = r.order_blocks?.ob_bajista_estado;
+  document.getElementById('ob-bear-status').textContent = obBearStatus || '—';
+  document.getElementById('ob-bear-status').style.color = obBearStatus === 'NO MITIGADO' ? '#ff3355' : '#4a6a8a';
 
   // Zonas
   setText('r-sup1', r.zonas?.soporte_1);
-  setText('r-sup2', r.zonas?.soporte_2);
   setText('r-res1', r.zonas?.resistencia_1);
-  setText('r-res2', r.zonas?.resistencia_2);
-  setText('r-dbottom', r.zonas?.double_bottom);
-  setText('r-dtop', r.zonas?.double_top);
   setText('r-demand', r.zonas?.zona_demanda);
   setText('r-supply', r.zonas?.zona_oferta);
   setText('r-fvg', r.zonas?.fvg);
+  setText('r-liq-up', r.zonas?.liquidez_arriba);
+  setText('r-liq-down', r.zonas?.liquidez_abajo);
 
   // Patrón AMD
-  const fase = (r.patron?.fase || '').toLowerCase();
+  const fase = (r.patron_amd?.fase || '').toLowerCase();
   document.getElementById('amd-acc').className = 'amd-box' + (fase.includes('accum') ? ' active-acc' : '');
   document.getElementById('amd-man').className = 'amd-box' + (fase.includes('manipul') ? ' active-man' : '');
   document.getElementById('amd-dis').className = 'amd-box' + (fase.includes('distrib') ? ' active-dis' : '');
   document.getElementById('amd-acc').querySelector('.amd-label').style.color = fase.includes('accum') ? '#00e87a' : '#2a4a6a';
   document.getElementById('amd-man').querySelector('.amd-label').style.color = fase.includes('manipul') ? '#ff8800' : '#2a4a6a';
   document.getElementById('amd-dis').querySelector('.amd-label').style.color = fase.includes('distrib') ? '#00d4ff' : '#2a4a6a';
-
-  setText('r-patron', r.patron?.nombre);
-  setText('r-fase', r.patron?.fase);
-  setText('r-expac', `${r.expansion_acumulacion?.estado} — ${r.expansion_acumulacion?.descripcion}`);
-  const vela = r.patron?.vela_confirmacion;
-  document.getElementById('r-vela').textContent = vela && vela !== 'Ninguno' ? `🕯 ${vela}` : '—';
-  setText('r-patron-desc', r.patron?.descripcion);
+  setText('r-fase', r.patron_amd?.fase);
+  setText('r-expac', r.patron_amd?.expansion_acumulacion);
+  setText('r-patron-desc', r.patron_amd?.descripcion);
 
   document.getElementById('results').style.display = 'block';
   document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 }
 
-function setText(id, val) {
-  document.getElementById(id).textContent = val || '—';
-}
-function setColor(id, val, color) {
-  const el = document.getElementById(id);
-  el.textContent = val || '—';
-  el.style.color = color;
-}
-
-function showError(msg) {
-  const el = document.getElementById('error-box');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
+function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val || '—'; }
+function setColor(id, val, color) { const el = document.getElementById(id); if (el) { el.textContent = val || '—'; el.style.color = color; } }
+function showError(msg) { const el = document.getElementById('error-box'); el.textContent = msg; el.style.display = 'block'; }
 </script>
 </body>
 </html>
